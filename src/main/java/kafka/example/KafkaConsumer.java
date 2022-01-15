@@ -22,13 +22,13 @@ public class KafkaConsumer {
     public static void main(String[] args) {
         Properties props = new Properties();
         // 设置zookeeper的链接地址
-        props.put("zookeeper.connect","192.168.31.121:2181,192.168.31.122:2181,192.168.31.123:2181");
+        props.put("zookeeper.connect", "192.168.31.121:2181,192.168.31.122:2181,192.168.31.123:2181");
         // 设置group id
         props.put("group.id", "group1");
 
         // kafka的group 消费记录是保存在zookeeper上的, 但这个信息在zookeeper上不是实时更新的, 需要有个间隔时间更新
         props.put("auto.commit.interval.ms", "1000");
-        props.put("zookeeper.session.timeout.ms","10000");
+        props.put("zookeeper.session.timeout.ms", "10000");
         props.put("zookeeper.sync.time.ms", "200");
         props.put("auto.offset.reset", "smallest");
         props.put("serializer.class", "kafka.serializer.StringEncoder");
@@ -37,15 +37,15 @@ public class KafkaConsumer {
 
         ConsumerConnector consumer = Consumer.createJavaConsumerConnector(config);
 
-        Map<String,Integer> topicCountMap = new HashMap<>();
+        Map<String, Integer> topicCountMap = new HashMap<>();
 
-        topicCountMap.put(topic,new Integer(1));
+        topicCountMap.put(topic, new Integer(1));
 
         StringDecoder keyDecoder = new StringDecoder(new VerifiableProperties());
         StringDecoder valueDecoder = new StringDecoder(new VerifiableProperties());
 
         Map<String, List<KafkaStream<String, String>>> consumerMap =
-                consumer.createMessageStreams(topicCountMap,keyDecoder,valueDecoder);
+                consumer.createMessageStreams(topicCountMap, keyDecoder, valueDecoder);
         KafkaStream<String, String> stream = consumerMap.get(topic).get(0);
         ConsumerIterator<String, String> it = stream.iterator();
         while (it.hasNext()) {

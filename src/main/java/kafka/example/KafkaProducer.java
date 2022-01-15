@@ -15,15 +15,15 @@ public class KafkaProducer {
 
     public static void main(String[] args) throws InterruptedException {
         Properties props = new Properties();
-        props.put("zookeeper.connect","192.168.31.121:2181,192.168.31.122:2181,192.168.31.123:2181");
+        props.put("zookeeper.connect", "192.168.31.121:2181,192.168.31.122:2181,192.168.31.123:2181");
         props.put("serializer.class", "kafka.serializer.StringEncoder");
-        props.put("metadata.broker.list","192.168.31.121:9092");
-        props.put("request.required.acks","1");
+        props.put("metadata.broker.list", "192.168.31.121:9092");
+        props.put("request.required.acks", "1");
         ProducerConfig config = new ProducerConfig(props);
         Producer p = new Producer(config);
         for (int i = 0; i < 10; i++) {
-            p.send(new KeyedMessage<Integer,String>(topic,"hello kafka"+i));
-            System.out.println("send message: "+"hello kafka "+i);
+            p.send(new KeyedMessage<Integer, String>(topic, "hello kafka" + i));
+            System.out.println("send message: " + "hello kafka " + i);
             TimeUnit.SECONDS.sleep(1);
         }
         p.close();

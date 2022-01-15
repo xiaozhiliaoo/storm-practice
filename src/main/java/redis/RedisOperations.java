@@ -20,7 +20,7 @@ public class RedisOperations {
     Jedis jedis = null;
 
     public RedisOperations(String redisIP, int port) {
-        jedis = new Jedis(redisIP,port);
+        jedis = new Jedis(redisIP, port);
     }
 
     public void insert(Map<String, Object> record, String id) {
