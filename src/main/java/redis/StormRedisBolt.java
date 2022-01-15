@@ -1,10 +1,10 @@
 package redis;
 
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.BasicOutputCollector;
-import backtype.storm.topology.IBasicBolt;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.tuple.Tuple;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.BasicOutputCollector;
+import org.apache.storm.topology.IBasicBolt;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.tuple.Tuple;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ public class StormRedisBolt implements IBasicBolt {
     private static final long servialVersionUID = 1L;
     private RedisOperations redisOperations = null;
     private String redisIP = null;
-    private int port ;
+    private int port;
 
     public StormRedisBolt(String redisIP, int port) {
         this.redisIP = redisIP;
@@ -26,18 +26,17 @@ public class StormRedisBolt implements IBasicBolt {
     }
 
 
-
     @Override
     public void prepare(Map stormConf, TopologyContext context) {
-        redisOperations = new RedisOperations(this.redisIP,this.port);
+        redisOperations = new RedisOperations(this.redisIP, this.port);
     }
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        Map<String,Object> record = new HashMap();
-        record.put("firstName",input.getValueByField("firstName"));
-        record.put("lastName",input.getValueByField("lastName"));
-        record.put("companyName",input.getValueByField("companyName"));
+        Map<String, Object> record = new HashMap();
+        record.put("firstName", input.getValueByField("firstName"));
+        record.put("lastName", input.getValueByField("lastName"));
+        record.put("companyName", input.getValueByField("companyName"));
         redisOperations.insert(record, UUID.randomUUID().toString());
     }
 

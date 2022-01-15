@@ -1,10 +1,10 @@
 package trident.wordcount;
 
-import backtype.storm.task.TopologyContext;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Values;
-import storm.trident.operation.TridentCollector;
-import storm.trident.spout.IBatchSpout;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.trident.operation.TridentCollector;
+import org.apache.storm.trident.spout.IBatchSpout;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Values;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,20 +17,19 @@ import java.util.Map;
 public class SubjectsSpouts implements IBatchSpout {
     public static final long serialVersionUID = 1L;
     private int batchSize;
-    private HashMap<Long,List<List<Object>>> batchMap = new HashMap<>();
-    private static final Map<Integer,String> DATA_MAP = new HashMap<>();
+    private HashMap<Long, List<List<Object>>> batchMap = new HashMap<>();
+    private static final Map<Integer, String> DATA_MAP = new HashMap<>();
 
     public SubjectsSpouts(int batchSize) {
         this.batchSize = batchSize;
     }
 
     static {
-        DATA_MAP.put(0,"java java php ruby c++");
-        DATA_MAP.put(1,"python python python java c++");
-        DATA_MAP.put(2,"php php php java ruby");
-        DATA_MAP.put(3,"ruby python python python php");
+        DATA_MAP.put(0, "java java php ruby c++");
+        DATA_MAP.put(1, "python python python java c++");
+        DATA_MAP.put(2, "php php php java ruby");
+        DATA_MAP.put(3, "ruby python python python php");
     }
-
 
 
     @Override
@@ -45,8 +44,8 @@ public class SubjectsSpouts implements IBatchSpout {
             batches.add(new Values(DATA_MAP.get(i)));
         }
         System.out.println("batchId: " + batchId);
-        this.batchMap.put(batchId,batches);
-        for(List<Object> list:batches){
+        this.batchMap.put(batchId, batches);
+        for (List<Object> list : batches) {
             tridentCollector.emit(list);
         }
         try {
@@ -59,7 +58,7 @@ public class SubjectsSpouts implements IBatchSpout {
 
     @Override
     public void ack(long batchId) {
-        System.out.println("remove batchId: "+ batchId);
+        System.out.println("remove batchId: " + batchId);
         this.batchMap.remove(batchId);
     }
 

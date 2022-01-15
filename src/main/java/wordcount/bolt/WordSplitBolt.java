@@ -1,19 +1,19 @@
 package wordcount.bolt;
 
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.IRichBolt;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.IRichBolt;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 
 import java.util.Map;
 
 /**
  * Created by lili on 2017/6/17.
  */
-public class WordSplitBolt implements IRichBolt{
+public class WordSplitBolt implements IRichBolt {
 
     public static final String ERROR_STR = "don't have a cow man";
     private OutputCollector collector;
@@ -29,7 +29,7 @@ public class WordSplitBolt implements IRichBolt{
         String sentence = tuple.getStringByField("sentence");
         String[] words = sentence.split(" ");
         //发送单词
-        for(String word:words){
+        for (String word : words) {
             this.collector.emit(new Values(word));
         }
     }

@@ -1,9 +1,9 @@
 package trident.wordcount;
 
-import backtype.storm.tuple.Values;
-import storm.trident.operation.BaseFunction;
-import storm.trident.operation.TridentCollector;
-import storm.trident.tuple.TridentTuple;
+import org.apache.storm.trident.operation.BaseFunction;
+import org.apache.storm.trident.operation.TridentCollector;
+import org.apache.storm.trident.tuple.TridentTuple;
+import org.apache.storm.tuple.Values;
 
 /**
  * Created by lili on 2017/6/17.
@@ -17,7 +17,7 @@ public class SplitFunction extends BaseFunction {
 
         String subjects = tridentTuple.getStringByField("subjects");
         //取出句子发送
-        for(String sub:subjects.split(" ")){
+        for (String sub : subjects.split(" ")) {
             tridentCollector.emit(new Values(sub));
         }
 

@@ -1,12 +1,12 @@
 package kafka.storm;
 
-import backtype.storm.topology.BasicOutputCollector;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseBasicBolt;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.StringUtils;
+import org.apache.storm.topology.BasicOutputCollector;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.topology.base.BaseBasicBolt;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,24 +14,23 @@ import java.util.List;
 /**
  * Created by lili on 2017/6/18.
  */
-public class SentenceBolt extends BaseBasicBolt{
+public class SentenceBolt extends BaseBasicBolt {
 
     private List<String> words = new ArrayList<>();
-
 
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
         String word = input.getString(0);
-        if(StringUtils.isBlank(word)){
+        if (StringUtils.isBlank(word)) {
             return;
         }
-        System.out.println("receive word:"+word);
+        System.out.println("receive word:" + word);
 
         words.add(word);
 
-        if(word.endsWith(".")){
-            collector.emit(ImmutableList.of((Object) StringUtils.join(words," ")));
+        if (word.endsWith(".")) {
+            collector.emit(ImmutableList.of((Object) StringUtils.join(words, " ")));
             words.clear();
         }
     }

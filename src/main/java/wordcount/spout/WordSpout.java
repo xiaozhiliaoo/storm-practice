@@ -1,11 +1,11 @@
 package wordcount.spout;
 
-import backtype.storm.spout.SpoutOutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.IRichSpout;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Values;
+import org.apache.storm.spout.SpoutOutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.IRichSpout;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Values;
 import wordcount.utils.Utils;
 
 import java.util.Map;
@@ -19,7 +19,7 @@ public class WordSpout implements IRichSpout {
 
     private SpoutOutputCollector collector;
 
-    private  int index = 0;
+    private int index = 0;
 
     private String[] sentences = {
             "my dog has fleas",
@@ -55,7 +55,7 @@ public class WordSpout implements IRichSpout {
         //永不停止 一直会发送  循环发送句子
         this.collector.emit(new Values(sentences[index]));
         index++;
-        if(index>=sentences.length){
+        if (index >= sentences.length) {
             index = 0;
         }
         //去掉之后停不下来程序  why？？？

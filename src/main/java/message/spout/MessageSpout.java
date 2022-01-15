@@ -1,11 +1,11 @@
 package message.spout;
 
-import backtype.storm.spout.SpoutOutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.IRichSpout;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Values;
+import org.apache.storm.spout.SpoutOutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.IRichSpout;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Values;
 
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class MessageSpout implements IRichSpout {
             "spark,sqoop"
     };
 
-    private SpoutOutputCollector collector ;
+    private SpoutOutputCollector collector;
 
     @Override
     public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
@@ -51,10 +51,10 @@ public class MessageSpout implements IRichSpout {
 
     @Override
     public void nextTuple() {
-        if(index<subjects.length){
+        if (index < subjects.length) {
             String sub = subjects[index];
             //emit(List<Object> tuple, Object messageId)
-            collector.emit(new Values(sub),index);
+            collector.emit(new Values(sub), index);
             index++;
         }
     }
@@ -62,16 +62,16 @@ public class MessageSpout implements IRichSpout {
     @Override
     public void ack(Object o) {
         //发送成功回调此函数
-        System.out.println("[消息发送成功！！！](messageId="+ o+ ")");
+        System.out.println("[消息发送成功！！！](messageId=" + o + ")");
 
     }
 
     @Override
     public void fail(Object o) {
-        System.out.println("[消息发送失败！！！](messageId="+ o+ ")");
+        System.out.println("[消息发送失败！！！](messageId=" + o + ")");
         System.out.println("[消息重新发送中......]");
         //发送失败会返回
-        collector.emit(new Values(subjects[(Integer) o]),o);
+        collector.emit(new Values(subjects[(Integer) o]), o);
         System.out.println("[消息重发成功！！！]");
     }
 

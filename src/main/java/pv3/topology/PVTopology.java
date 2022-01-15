@@ -1,8 +1,9 @@
 package pv3.topology;
 
-import backtype.storm.Config;
-import backtype.storm.LocalCluster;
-import backtype.storm.topology.TopologyBuilder;
+import lombok.SneakyThrows;
+import org.apache.storm.Config;
+import org.apache.storm.LocalCluster;
+import org.apache.storm.topology.TopologyBuilder;
 import pv3.bolt.LogAnalysis;
 import pv3.bolt.PageViewCounter;
 import pv3.spout.LogReader;
@@ -13,15 +14,16 @@ import wordcount.utils.Utils;
  */
 public class PVTopology {
 
+    @SneakyThrows
     public static void main(String[] args) throws InterruptedException {
         TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("log-reader",new LogReader());
-        builder.setBolt("log-analysis",new LogAnalysis()).shuffleGrouping("log-reader");
-        builder.setBolt("pagevie-counter",new PageViewCounter(),2).shuffleGrouping("log-analysis");
+        builder.setSpout("log-reader", new LogReader());
+        builder.setBolt("log-analysis", new LogAnalysis()).shuffleGrouping("log-reader");
+        builder.setBolt("pagevie-counter", new PageViewCounter(), 2).shuffleGrouping("log-analysis");
 
         Config conf = new Config();
         conf.setDebug(false);
-        conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING,1);
+        conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
 
         LocalCluster cluster = new LocalCluster();
 

@@ -1,12 +1,12 @@
 package pv.bolt;
 
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.topology.base.BaseRichBolt;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,8 @@ import java.util.Map;
 public class LogStat extends BaseRichBolt {
 
     private OutputCollector collector;
-    private Map<String,Integer> pvMap = new HashMap<>();
+    private Map<String, Integer> pvMap = new HashMap<>();
+
     @Override
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
         this.collector = outputCollector;
@@ -26,16 +27,16 @@ public class LogStat extends BaseRichBolt {
     @Override
     public void execute(Tuple tuple) {
         String user = tuple.getStringByField("user");
-        if(pvMap.containsKey(user)){
-            pvMap.put(user,pvMap.get(user)+1);
-        }else{
-            pvMap.put(user,1);
+        if (pvMap.containsKey(user)) {
+            pvMap.put(user, pvMap.get(user) + 1);
+        } else {
+            pvMap.put(user, 1);
         }
-        collector.emit(new Values(user,pvMap.get(user)));
+        collector.emit(new Values(user, pvMap.get(user)));
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields("user","pv"));
+        outputFieldsDeclarer.declare(new Fields("user", "pv"));
     }
 }

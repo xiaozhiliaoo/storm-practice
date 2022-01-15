@@ -1,40 +1,41 @@
 package trident.example;
 
-import backtype.storm.Config;
-import backtype.storm.LocalCluster;
-import backtype.storm.StormSubmitter;
-import backtype.storm.generated.AlreadyAliveException;
-import backtype.storm.generated.InvalidTopologyException;
-import backtype.storm.generated.StormTopology;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Values;
-import storm.trident.Stream;
-import storm.trident.TridentTopology;
-import storm.trident.operation.BaseFilter;
-import storm.trident.operation.BaseFunction;
-import storm.trident.operation.TridentCollector;
-import storm.trident.testing.FixedBatchSpout;
-import storm.trident.tuple.TridentTuple;
+import lombok.SneakyThrows;
+import org.apache.storm.Config;
+import org.apache.storm.LocalCluster;
+import org.apache.storm.StormSubmitter;
+import org.apache.storm.generated.AlreadyAliveException;
+import org.apache.storm.generated.InvalidTopologyException;
+import org.apache.storm.generated.StormTopology;
+import org.apache.storm.trident.Stream;
+import org.apache.storm.trident.TridentTopology;
+import org.apache.storm.trident.operation.BaseFilter;
+import org.apache.storm.trident.operation.BaseFunction;
+import org.apache.storm.trident.operation.TridentCollector;
+import org.apache.storm.trident.testing.FixedBatchSpout;
+import org.apache.storm.trident.tuple.TridentTuple;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Values;
 
 /**
  * Created by lili on 2017/6/17.
  */
 public class TridentFilter {
 
-    private static class CheckFilter extends BaseFilter{
+    private static class CheckFilter extends BaseFilter {
 
         @Override
         public boolean isKeep(TridentTuple tridentTuple) {
             int a = tridentTuple.getInteger(0);
             int b = tridentTuple.getInteger(1);
-            if((a+b)%2==0){
+            if ((a + b) % 2 == 0) {
                 return true;
             }
             return false;
         }
     }
 
-    private static class Result extends BaseFunction{
+    private static class Result extends BaseFunction {
 
         @Override
         public void execute(TridentTuple tridentTuple, TridentCollector tridentCollector) {
@@ -45,6 +46,7 @@ public class TridentFilter {
             Integer d = tridentTuple.getIntegerByField("d");
         }
     }
+
     private static StormTopology buildTopology() {
         // 链式编程
         TridentTopology topology = new TridentTopology();
@@ -67,6 +69,8 @@ public class TridentFilter {
         return topology.build();
     }
 
+
+    @SneakyThrows
     public static void main(String[] args) throws InterruptedException, AlreadyAliveException, InvalidTopologyException {
         Config config = new Config();
         config.setNumWorkers(2);

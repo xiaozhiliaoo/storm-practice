@@ -1,11 +1,11 @@
 package pv2.spout;
 
-import backtype.storm.spout.SpoutOutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichSpout;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Values;
+import org.apache.storm.spout.SpoutOutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.topology.base.BaseRichSpout;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Values;
 
 import java.util.Map;
 import java.util.Random;
@@ -18,8 +18,9 @@ public class LogReader extends BaseRichSpout {
     private SpoutOutputCollector _collector;
     private Random _rand = new Random();
     private int _count = 100;
-    private String[] _users = {"userA","userB","userC","userD","userE"};
-    private String[] _urls = {"urlA","urlB","urlC","urlD","urlE"};
+    private String[] _users = {"userA", "userB", "userC", "userD", "userE"};
+    private String[] _urls = {"urlA", "urlB", "urlC", "urlD", "urlE"};
+
     @Override
     public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
         this._collector = spoutOutputCollector;
@@ -29,10 +30,10 @@ public class LogReader extends BaseRichSpout {
     public void nextTuple() {
         try {
             Thread.sleep(1000);
-            while(_count-- >= 0){
-                if(_count == 0){
+            while (_count-- >= 0) {
+                if (_count == 0) {
                     _collector.emit("stop", new Values(""));
-                }else {
+                } else {
                     _collector.emit("log", new Values(
                             System.currentTimeMillis(),
                             _users[_rand.nextInt(5)],
@@ -46,7 +47,7 @@ public class LogReader extends BaseRichSpout {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declareStream("log",new Fields("time","user","url"));
-        outputFieldsDeclarer.declareStream("stop",new Fields("flag"));
+        outputFieldsDeclarer.declareStream("log", new Fields("time", "user", "url"));
+        outputFieldsDeclarer.declareStream("stop", new Fields("flag"));
     }
 }

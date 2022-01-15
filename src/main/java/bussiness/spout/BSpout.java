@@ -1,22 +1,23 @@
 package bussiness.spout;
 
-import backtype.storm.spout.SpoutOutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichSpout;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Values;
+import org.apache.storm.spout.SpoutOutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.topology.base.BaseRichSpout;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Values;
 
 import java.util.Map;
 
 /**
  * Created by lili on 2017/6/18.
  */
-public class BSpout extends BaseRichSpout{
+public class BSpout extends BaseRichSpout {
     private SpoutOutputCollector collector;
-    private String[] users = {"userA","userB","userC","userD","userE"};
-    private String[] pays = {"100","234","465","1111","3455"};
+    private String[] users = {"userA", "userB", "userC", "userD", "userE"};
+    private String[] pays = {"100", "234", "465", "1111", "3455"};
     private int count = 5;
+
     @Override
     public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
         this.collector = spoutOutputCollector;
@@ -27,7 +28,7 @@ public class BSpout extends BaseRichSpout{
         for (int i = 0; i < count; i++) {
             try {
                 Thread.sleep(1500);
-                collector.emit("business",new Values(System.currentTimeMillis(),
+                collector.emit("business", new Values(System.currentTimeMillis(),
                         users[i],
                         pays[i]));
             } catch (InterruptedException e) {
@@ -39,6 +40,6 @@ public class BSpout extends BaseRichSpout{
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declareStream("business",new Fields("time","user","pay"));
+        outputFieldsDeclarer.declareStream("business", new Fields("time", "user", "pay"));
     }
 }

@@ -1,11 +1,11 @@
 package message.bolt;
 
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.IRichBolt;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.IRichBolt;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class WriterBolt implements IRichBolt {
             e.printStackTrace();
             collector.fail(tuple);
         }
-        collector.emit(tuple,new Values(word));
+        collector.emit(tuple, new Values(word));
         collector.ack(tuple);
 
     }

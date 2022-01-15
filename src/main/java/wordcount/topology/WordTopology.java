@@ -1,9 +1,10 @@
 package wordcount.topology;
 
-import backtype.storm.Config;
-import backtype.storm.LocalCluster;
-import backtype.storm.topology.TopologyBuilder;
-import backtype.storm.tuple.Fields;
+import lombok.SneakyThrows;
+import org.apache.storm.Config;
+import org.apache.storm.LocalCluster;
+import org.apache.storm.topology.TopologyBuilder;
+import org.apache.storm.tuple.Fields;
 import wordcount.bolt.WordCountBolt;
 import wordcount.bolt.WordReportBolt;
 import wordcount.bolt.WordSplitBolt;
@@ -22,6 +23,7 @@ public class WordTopology {
     public static final String REPORT_BOLT_ID = "report-bolt";
     public static final String TOPOLOGY_NAME = "word-count-topology";
 
+    @SneakyThrows
     public static void main(String[] args) {
         //实例对象
         WordSpout spout = new WordSpout();
@@ -32,20 +34,20 @@ public class WordTopology {
         // 构建拓扑图
         TopologyBuilder builder = new TopologyBuilder();
 
-        builder.setSpout(WORD_SPOUT_ID,spout);
+        builder.setSpout(WORD_SPOUT_ID, spout);
         // WordSpout -> WordSplitBolt
-        builder.setBolt(SPLIT_BOLT_ID,splitBolt,5).shuffleGrouping(WORD_SPOUT_ID);
+        builder.setBolt(SPLIT_BOLT_ID, splitBolt, 5).shuffleGrouping(WORD_SPOUT_ID);
         // WordSplitBolt -> WordCountBolt  随机分组肯定不行  一个节点被另外统计了
-        builder.setBolt(COUNT_BOLT_ID,countBolt,5).fieldsGrouping(SPLIT_BOLT_ID,new Fields("word"));
+        builder.setBolt(COUNT_BOLT_ID, countBolt, 5).fieldsGrouping(SPLIT_BOLT_ID, new Fields("word"));
         // WordCountBolt -> WordReportBolt  统计时候全局分组
-        builder.setBolt(REPORT_BOLT_ID,reportBolt,10).globalGrouping(COUNT_BOLT_ID);
+        builder.setBolt(REPORT_BOLT_ID, reportBolt, 10).globalGrouping(COUNT_BOLT_ID);
 
         //本地配置
         Config config = new Config();
         config.setDebug(false);
         LocalCluster cluster = new LocalCluster();
         // 集群提交拓扑
-        cluster.submitTopology(TOPOLOGY_NAME,config,builder.createTopology());
+        cluster.submitTopology(TOPOLOGY_NAME, config, builder.createTopology());
         Utils.waitForSeconds(10);
         cluster.killTopology(TOPOLOGY_NAME);
         cluster.shutdown();

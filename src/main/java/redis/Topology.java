@@ -1,8 +1,9 @@
 package redis;
 
-import backtype.storm.Config;
-import backtype.storm.LocalCluster;
-import backtype.storm.topology.TopologyBuilder;
+import lombok.SneakyThrows;
+import org.apache.storm.Config;
+import org.apache.storm.LocalCluster;
+import org.apache.storm.topology.TopologyBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  */
 public class Topology {
 
+    @SneakyThrows
     public static void main(String[] args) {
         TopologyBuilder builder = new TopologyBuilder();
         List<String> zks = new ArrayList<>();
@@ -21,9 +23,9 @@ public class Topology {
         cFs.add("persona1");
         cFs.add("company");
 
-        builder.setSpout("spout",new SampleSpout(),2);
+        builder.setSpout("spout", new SampleSpout(), 2);
 
-        builder.setBolt("bolt",new StormRedisBolt("192.168.1.1",6379)).shuffleGrouping("spout");
+        builder.setBolt("bolt", new StormRedisBolt("192.168.1.1", 6379)).shuffleGrouping("spout");
 
         Config config = new Config();
 
@@ -31,7 +33,7 @@ public class Topology {
 
         LocalCluster localCluster = new LocalCluster();
 
-        localCluster.submitTopology("StormRedisTopology",config,builder.createTopology());
+        localCluster.submitTopology("StormRedisTopology", config, builder.createTopology());
 
         try {
             Thread.sleep(10000);

@@ -1,12 +1,13 @@
 package message.bolt;
 
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.IRichBolt;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
+
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.IRichBolt;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class SpliterBolt implements IRichBolt {
     private OutputCollector collector;
 
     private boolean flag = false;
+
     @Override
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
         this.collector = outputCollector;
@@ -36,10 +38,10 @@ public class SpliterBolt implements IRichBolt {
 //                int a = 1/0;
 //            }
             String[] words = subjects.split(",");
-            List<String> list =  new ArrayList<>();
+            List<String> list = new ArrayList<>();
             int index = 0;
-            for(String word:words){
-                collector.emit(tuple,new Values(word));
+            for (String word : words) {
+                collector.emit(tuple, new Values(word));
 //                list.add(word);
 //                index++;
             }

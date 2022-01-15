@@ -1,12 +1,12 @@
 package bussiness.bolt;
 
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.topology.base.BaseRichBolt;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,12 +16,12 @@ import java.util.Map;
  */
 public class LogMergeBolt extends BaseRichBolt {
     private transient OutputCollector collector;
-    private HashMap<String,String> srcMap;
+    private HashMap<String, String> srcMap;
 
     @Override
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
         this.collector = outputCollector;
-        if(srcMap==null){
+        if (srcMap == null) {
             srcMap = new HashMap<>();
         }
     }
@@ -29,20 +29,20 @@ public class LogMergeBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple tuple) {
         String streamId = tuple.getSourceStreamId();
-        if(streamId.equals("visit")){
+        if (streamId.equals("visit")) {
             String user = tuple.getStringByField("user");
             String srcId = tuple.getStringByField("srcid");
             //所有用户
-            srcMap.put(user,srcId);
-        }else if(streamId.equals("business")){
+            srcMap.put(user, srcId);
+        } else if (streamId.equals("business")) {
             String user = tuple.getStringByField("user");
             String pay = tuple.getStringByField("pay");
             String srcId = srcMap.get(user);
-            if(srcId!=null){
-                collector.emit(new Values(user,pay,srcId));
+            if (srcId != null) {
+                collector.emit(new Values(user, pay, srcId));
                 //没统计一个删除一个用户
                 srcMap.remove(user);
-            }else{
+            } else {
                 //成交日志快于流量日志时才会发生
             }
         }
@@ -50,6 +50,6 @@ public class LogMergeBolt extends BaseRichBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields("user","pay","srcid"));
+        outputFieldsDeclarer.declare(new Fields("user", "pay", "srcid"));
     }
 }
